@@ -29,6 +29,12 @@ class bmi extends StatefulWidget {
 class _bmiState extends State<bmi> {
   double bmiresult = 0;
   String description = "";
+  final _heightinput = TextEditingController();
+  final _weightinput = TextEditingController();
+
+
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +42,10 @@ class _bmiState extends State<bmi> {
         appBar: AppBar(
           title: Text("BMI calculator"),
           centerTitle: true,
+          backgroundColor: Colors.lightBlueAccent,
         ),
         body: Container(
+            padding: EdgeInsets.only(top: 20),
             alignment: Alignment.center,
             child: Column(
               children: <Widget>[
@@ -50,6 +58,7 @@ class _bmiState extends State<bmi> {
                     Container(
                       width: 140,
                       child: TextField(
+                        controller: _heightinput,
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.w300,
@@ -68,6 +77,7 @@ class _bmiState extends State<bmi> {
                     Container(
                       width: 140,
                       child: TextField(
+                        controller: _weightinput,
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.w300,
@@ -88,13 +98,14 @@ class _bmiState extends State<bmi> {
                 SizedBox(
                   height: 30,
                 ),
-                Container(
+                ElevatedButton(
+                  onPressed: calculate,
                   child: Text(
                     "Calculate",
                     style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
                 ),
@@ -103,7 +114,7 @@ class _bmiState extends State<bmi> {
                 ),
                 Container(
                   child: Text(
-                    "21",
+                    bmiresult.toStringAsFixed(2),
                     style: TextStyle(
                       fontSize: 70,
                       color: Colors.blueAccent,
@@ -116,7 +127,7 @@ class _bmiState extends State<bmi> {
                 ),
                 Container(
                   child: Text(
-                    "normal ",
+                    description.toString(),
                     style: TextStyle(
                       fontSize: 35,
                       color: Colors.blueAccent,
@@ -126,5 +137,21 @@ class _bmiState extends State<bmi> {
                 ),
               ],
             )));
+  }
+
+  void calculate() {
+    final weight = double.tryParse(_weightinput.text);
+
+    final height = double.tryParse(_heightinput.text);
+
+    setState(() {
+      if (weight != null && height != null) {
+        bmiresult = weight / (height * height);
+        if (bmiresult <= 18.5) description = "Underweight";
+        else if (bmiresult <= 25 && bmiresult>=18.5)  description = "Healthy";
+          else if (bmiresult >= 25 && bmiresult<= 30)  description = "Overweight";
+            else if (bmiresult>=30)  description = "Obesity";
+      }
+    });
   }
 }
